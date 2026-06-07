@@ -43,6 +43,8 @@ def main():
                 f.write(response.content)
             saveToDatabase(yearMonth, filepath, cur, conn)
 
+    pruneData(cutoff, cur, conn)
+
 
         
 # Check DB and parse csv and save to DB
@@ -166,6 +168,18 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
 
     conn.commit()
 
+    print (f"{yearMonth} data saved")
+
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
+
+def pruneData(cutoff, cur, conn):
+    cur.execute("DELETE FROM raw_postings WHERE import_batch_id IN (SELECT id FROM import_batches WHERE year_month < %s)", (cutoff,))
+    cur.execute("DELETE FROM monthly_aggregates WHERE year_month < %s", (cutoff,))
+    cur.execute("DELETE FROM import_batches WHERE year_month < %s", (cutoff,))
+    conn.commit()
+    print("Pruned data older than", cutoff)
 
 
 
