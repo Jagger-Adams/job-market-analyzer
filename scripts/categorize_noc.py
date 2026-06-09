@@ -33,21 +33,28 @@ def main():
         existing_cats = cur.fetchall()
         cats_text = "\n".join([f"{cat} > {sub}" for cat, sub in existing_cats]) if existing_cats else "None yet"
 
-        prompt = f"""You are categorizing Canadian job occupations into broad industry categories.
+        prompt = f"""You are categorizing Canadian job occupations into a two-level hierarchy for a job market app.
 
-                    Categories already in use (reuse these where appropriate to avoid duplicates):
-                    {cats_text}
+            Level 1 - industry_category: A broad industry bucket. Use only 10-15 total across all occupations.
+            Examples: Technology, Healthcare, Trades, Education, Finance, Legal, Retail, Transportation, Agriculture, Government, Arts, Hospitality, Manufacturing
 
-                    For each NOC code below, return a JSON array where each element has:
-                    - noc21_code: the code as given
-                    - industry_category: broad industry (e.g. Technology, Healthcare, Trades, Education, Finance, Legal, Retail, Transportation, Agriculture, Government, Arts, Hospitality)
-                    - subcategory: specific role within that industry (e.g. Software Development, Nursing, Electrical, Primary Education)
+            Level 2 - subcategory: A mid-level grouping SHARED by multiple related occupations within that industry.
+            DO NOT copy the job title. Use short generic labels like "Accounting", "Software Development", "Nursing", "Electrical", "Primary Education".
+            Multiple NOC codes should share the same subcategory label.
 
-                    Return ONLY the JSON array, no explanation, no markdown, no code fences.
+            Categories already in use (reuse these where appropriate):
+            {cats_text}
 
-                    NOC codes to categorize:
-                    {batch_text}
-                """
+            For each NOC code below, return a JSON array where each element has:
+            - noc21_code: the code as given
+            - industry_category: broad industry
+            - subcategory: short shared grouping label (NOT the job title)
+
+            Return ONLY the JSON array, no explanation, no markdown, no code fences.
+
+            NOC codes to categorize:
+            {batch_text}
+        """
 
         response = requests.post("http://localhost:11434/api/generate", json={
             "model": "qwen2.5:7b",
