@@ -1,33 +1,17 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-import psycopg2
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from backend.db import get_conn, close_conn
+from backend.routes import overview, trends, explore, roles
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.conn = psycopg2.connect(
-        host=os.getenv("POSTGRES_HOST"),
-        port=os.getenv("POSTGRES_PORT"),
-        dbname=os.getenv("POSTGRES_DB"),
-        user=os.getenv("POSTGRES_USER"),
-        password=os.getenv("POSTGRES_PASSWORD")
-    )
+    app.state.conn = get_conn()
     yield
-    app.state.conn.close()
+    close_conn(app.state.conn)
 
 app = FastAPI(lifespan=lifespan)
 
-@app.get("/overview")
-def get_overview(request):
-    pass
-
-@app.get("/trends")
-def get_trends(request):
-    pass
-
-@app.get("/explore")
-def get_explore(request):
-    pass
+app.include_router(overview.router)
+app.include_router(trends.router)
+app.include_router(explore.router)
+app.include_router(roles.router)
