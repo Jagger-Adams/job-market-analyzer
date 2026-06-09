@@ -33,32 +33,31 @@ def main():
         existing_cats = cur.fetchall()
         cats_text = "\n".join([f"{cat} > {sub}" for cat, sub in existing_cats]) if existing_cats else "None yet"
 
-        prompt = f"""You are categorizing Canadian job occupations into a two-level hierarchy for a job market app.
+        prompt = f"""You are categorizing Canadian job occupations for a Canadian job market app.
 
-Level 1 - industry_category: A broad industry bucket. Use only 10-15 total across all occupations.
-Examples: Technology, Healthcare, Trades, Education, Finance, Legal, Retail, Transportation, Agriculture, Government, Arts, Hospitality, Manufacturing
+Assign each NOC code to one industry_category and one subcategory from the lists below where possible.
+Only create a NEW subcategory if none of the existing ones fit — this should be rare.
 
-Level 2 - subcategory: A mid-level grouping shared by MULTIPLE related NOC codes within the same industry.
-Rules:
-- 2-4 words maximum. Short, broad, user-friendly.
-- Industry-specific: never use a bare generic like "Management" — use "Financial Management", "Healthcare Management" etc.
-- Think about what end users care about: "Software Development", "Nursing", "Electrical", "Sales" — not "Correspondence and Regulatory Clerical Work"
-- Every subcategory must belong to exactly one industry. No subcategory should appear under multiple industries.
-- Multiple NOC codes in this batch should share the same subcategory where they are related.
-- DO NOT copy the job title as the subcategory.
-- The number of unique subcategories in your response will vary — some batches may have 1, others 10+. Do not aim for a fixed number.
+Allowed industry categories (use ONLY these):
+Technology, Healthcare, Trades, Finance, Education, Legal, Retail, Transportation, Agriculture, Government, Hospitality, Manufacturing, Arts, Engineering
 
-Categories already in use (reuse these where appropriate):
+Subcategory rules:
+- 2-3 words max, broad and user-friendly (e.g. "Software Development", "Nursing", "Mechanical Engineering", "Sales", "Accounting")
+- Industry-specific: "Financial Management" not just "Management"
+- Multiple NOC codes MUST share a subcategory if they are related — do not give each code its own unique subcategory
+- Never copy the job title
+
+Existing subcategories already in use — REUSE THESE:
 {cats_text}
 
-For each NOC code below, return a JSON array where each element has:
-- noc21_code: the code as given
-- industry_category: broad industry
-- subcategory: short industry-specific grouping label (NOT the job title, 2-4 words max)
+Return a JSON array only. Each element:
+- noc21_code: as given
+- industry_category: from allowed list
+- subcategory: reuse existing or create new if truly necessary
 
-Return ONLY the JSON array, no explanation, no markdown, no code fences.
+No explanation, no markdown, no code fences.
 
-NOC codes to categorize:
+NOC codes:
 {batch_text}
 """
 
