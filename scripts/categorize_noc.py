@@ -35,44 +35,45 @@ def main():
 
         prompt = f"""You are categorizing Canadian job occupations into a two-level hierarchy for a job market app.
 
-            Level 1 - industry_category: A broad industry bucket. Use only 10-15 total across all occupations.
-            Examples: Technology, Healthcare, Trades, Education, Finance, Legal, Retail, Transportation, Agriculture, Government, Arts, Hospitality, Manufacturing
+Level 1 - industry_category: A broad industry bucket. Use only 10-15 total across all occupations.
+Examples: Technology, Healthcare, Trades, Education, Finance, Legal, Retail, Transportation, Agriculture, Government, Arts, Hospitality, Manufacturing
 
-            Level 2 - subcategory: A mid-level grouping SHARED by multiple related occupations within that industry.
-            DO NOT copy the job title. Use short generic labels like "Accounting", "Software Development", "Nursing", "Electrical", "Primary Education".
-            Multiple NOC codes should share the same subcategory label.
+Level 2 - subcategory: A mid-level grouping SHARED by multiple related occupations within that industry.
+DO NOT copy the job title. Use short generic labels like "Accounting", "Software Development", "Nursing", "Electrical", "Primary Education".
+Multiple NOC codes should share the same subcategory label.
 
-            Categories already in use (reuse these where appropriate):
-            {cats_text}
+Categories already in use (reuse these where appropriate):
+{cats_text}
 
-            For each NOC code below, return a JSON array where each element has:
-            - noc21_code: the code as given
-            - industry_category: broad industry
-            - subcategory: short shared grouping label (NOT the job title)
+For each NOC code below, return a JSON array where each element has:
+- noc21_code: the code as given
+- industry_category: broad industry
+- subcategory: short shared grouping label (NOT the job title)
 
-            Return ONLY the JSON array, no explanation, no markdown, no code fences.
+Return ONLY the JSON array, no explanation, no markdown, no code fences.
 
-            NOC codes to categorize:
-            {batch_text}
-        """
+NOC codes to categorize:
+{batch_text}
+"""
 
-        response = requests.post("http://localhost:11434/api/generate", json={
-            "model": "qwen2.5:7b",
-            "prompt": prompt,
-            "stream": False
-        })
-
-        try:
-            results = json.loads(response.json()["response"])
-            records = [(r["noc21_code"], dict(batch)[r["noc21_code"]], r["industry_category"], r["subcategory"]) for r in results]
-            execute_values(cur,
-                "INSERT INTO noc_categories (noc21_code, noc21_name, industry_category, subcategory) VALUES %s ON CONFLICT DO NOTHING",
-                records)
-            conn.commit()
-            print(f"Batch {i//20 + 1} done ({len(records)} records)")
-        except Exception as e:
-            print(f"Batch {i//20 + 1} failed: {e}")
-            continue
+        for attempt in range(2):
+            response = requests.post("http://localhost:11434/api/generate", json={
+                "model": "qwen2.5:7b",
+                "prompt": prompt,
+                "stream": False
+            }, timeout=120)
+            try:
+                results = json.loads(response.json()["response"])
+                records = [(r["noc21_code"], dict(batch)[r["noc21_code"]], r["industry_category"], r["subcategory"]) for r in results]
+                execute_values(cur,
+                    "INSERT INTO noc_categories (noc21_code, noc21_name, industry_category, subcategory) VALUES %s ON CONFLICT DO NOTHING",
+                    records)
+                conn.commit()
+                print(f"Batch {i//20 + 1} done ({len(records)} records)")
+                break
+            except Exception as e:
+                if attempt == 1:
+                    print(f"Batch {i//20 + 1} failed after retry: {e}")
 
     print("Done.")
 
