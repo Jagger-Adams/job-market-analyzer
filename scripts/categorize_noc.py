@@ -61,7 +61,7 @@ NOC codes to categorize:
                 "model": "qwen2.5:7b",
                 "prompt": prompt,
                 "stream": False
-            }, timeout=120)
+            }, timeout=480)
             try:
                 results = json.loads(response.json()["response"])
                 records = [(r["noc21_code"], dict(batch)[r["noc21_code"]], r["industry_category"], r["subcategory"]) for r in results]
