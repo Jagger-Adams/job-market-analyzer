@@ -5,6 +5,72 @@ from psycopg2.extras import execute_values
 import requests
 import json
 
+# Deterministic industry mapping by first 2 digits of NOC code
+NOC_INDUSTRY_MAP = {
+    "00": "Government and Management",
+    "10": "Business and Administration",
+    "11": "Finance",
+    "12": "Business and Administration",
+    "13": "Business and Administration",
+    "14": "Business and Administration",
+    "20": "Engineering",
+    "21": "Engineering",  # split below by 3rd digit
+    "22": "Technology",
+    "30": "Healthcare",
+    "31": "Healthcare",
+    "32": "Healthcare",
+    "33": "Healthcare",
+    "40": "Government and Management",
+    "41": "Education and Social Services",
+    "42": "Legal and Public Safety",
+    "43": "Education and Social Services",
+    "44": "Education and Social Services",
+    "45": "Education and Social Services",
+    "50": "Arts and Recreation",
+    "51": "Arts and Recreation",
+    "52": "Arts and Recreation",
+    "53": "Arts and Recreation",
+    "54": "Arts and Recreation",
+    "55": "Arts and Recreation",
+    "60": "Retail and Sales",
+    "62": "Retail and Sales",
+    "63": "Retail and Sales",
+    "64": "Retail and Sales",
+    "65": "Retail and Sales",
+    "70": "Trades and Transportation",
+    "72": "Trades and Transportation",
+    "73": "Trades and Transportation",
+    "74": "Trades and Transportation",
+    "75": "Trades and Transportation",
+    "80": "Agriculture and Resources",
+    "82": "Agriculture and Resources",
+    "83": "Agriculture and Resources",
+    "84": "Agriculture and Resources",
+    "85": "Agriculture and Resources",
+    "90": "Manufacturing",
+    "92": "Manufacturing",
+    "93": "Manufacturing",
+    "94": "Manufacturing",
+    "95": "Manufacturing",
+}
+
+# Sub-major group 211/212/221/222 = natural/applied sciences = Technology
+# 213/223 = engineering = Engineering
+NOC_21_SPLIT = {
+    "211": "Technology",
+    "212": "Technology",
+    "213": "Engineering",
+    "221": "Technology",
+    "222": "Technology",
+    "223": "Engineering",
+}
+
+def get_industry(noc_code):
+    prefix3 = noc_code[:3]
+    if prefix3 in NOC_21_SPLIT:
+        return NOC_21_SPLIT[prefix3]
+    return NOC_INDUSTRY_MAP.get(noc_code[:2], "Other")
+
 def main():
     load_dotenv()
 
@@ -21,39 +87,37 @@ def main():
     existing_codes = {row[0] for row in cur.fetchall()}
 
     cur.execute("SELECT DISTINCT noc21_code, noc21_name FROM raw_postings WHERE noc21_code IS NOT NULL")
-    to_categorize = [row for row in cur.fetchall() if row[0] not in existing_codes]
+    to_categorize = [(code, name) for code, name in cur.fetchall() if code not in existing_codes]
 
     print(f"Categorizing {len(to_categorize)} NOC codes...")
 
     for i in range(0, len(to_categorize), 20):
         batch = to_categorize[i:i+20]
-        batch_text = "\n".join([f"{code}: {name}" for code, name in batch])
+        industry_map = {code: get_industry(code) for code, name in batch}
+        batch_text = "\n".join([f"{code}: {name} [industry: {industry_map[code]}]" for code, name in batch])
 
         cur.execute("SELECT DISTINCT industry_category, subcategory FROM noc_categories")
         existing_cats = cur.fetchall()
         cats_text = "\n".join([f"{cat} > {sub}" for cat, sub in existing_cats]) if existing_cats else "None yet"
 
-        prompt = f"""You are categorizing Canadian job occupations for a Canadian job market app.
+        prompt = f"""You are assigning subcategories to Canadian job occupations for a job market app.
 
-Assign each NOC code to one industry_category and one subcategory from the lists below where possible.
-Only create a NEW subcategory if none of the existing ones fit — this should be rare.
-
-Allowed industry categories (use ONLY these):
-Technology, Healthcare, Trades, Finance, Education, Legal, Retail, Transportation, Agriculture, Government, Hospitality, Manufacturing, Arts, Engineering
+The industry_category is already assigned for each code — use it exactly as given.
 
 Subcategory rules:
-- 2-3 words max, broad and user-friendly (e.g. "Software Development", "Nursing", "Mechanical Engineering", "Sales", "Accounting")
-- Industry-specific: "Financial Management" not just "Management"
-- Multiple NOC codes MUST share a subcategory if they are related — do not give each code its own unique subcategory
+- 2-3 words max, broad and user-friendly
+- Must be specific to the assigned industry (e.g. "Software Development" not just "Development")
+- Multiple related NOC codes MUST share the same subcategory — do not give each code a unique one
 - Never copy the job title
+- Reuse existing subcategories below wherever they fit
 
-Existing subcategories already in use — REUSE THESE:
+Existing subcategories in use — REUSE THESE:
 {cats_text}
 
 Return a JSON array only. Each element:
 - noc21_code: as given
-- industry_category: from allowed list
-- subcategory: reuse existing or create new if truly necessary
+- industry_category: exactly as given in brackets
+- subcategory: 2-3 word grouping label
 
 No explanation, no markdown, no code fences.
 
