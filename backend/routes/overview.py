@@ -63,5 +63,5 @@ def get_overview(request: Request):
     result = cur.fetchall()
     provincePostings = [{"province": str(r[0]), 'postings': int(r[1])} for r in result]
     response['province_postings'] = provincePostings
-
+    cur.close()
     return response
