@@ -1,0 +1,29 @@
+.industryTable{
+    gap: var(--space-xs);
+    background-color: var(--color-surface);
+    padding: var(--space-s);
+    border-radius: 8px;
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.industryTableBody{
+    gap: var(--space-xs);
+}
+
+.industryTableRow{
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-xl);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: var(--space-xs);
+}
+
+.pctCapsule{
+    padding: var(--space-xs);
+    border-radius: 8px;
+}
+
+.industryPostingCount{
+    color: var(--color-muted);
+}

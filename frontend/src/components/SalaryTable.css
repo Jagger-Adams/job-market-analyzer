@@ -1,0 +1,29 @@
+.salaryTable{
+    gap: var(--space-xs);
+    background-color: var(--color-surface);
+    padding: var(--space-s);
+    border-radius: 8px;
+    border: 2px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.salaryTableBody{
+    gap: var(--space-xs);
+}
+
+.salaryLabel{
+    font-weight: 600;
+}
+
+.progressBarParent {
+    width: 100%;
+    background-color: var(--color-border);
+    border-radius: 4px;
+}
+
+.progressBarChild {
+    display: block;
+    background-color: var(--color-accent);
+    height: 8px;
+    border-radius: 4px;
+}

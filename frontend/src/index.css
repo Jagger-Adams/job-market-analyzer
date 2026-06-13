@@ -1,0 +1,87 @@
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('./fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: 'Atkinson Hyperlegible';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  /* color scheme */
+  --color-bg: #0d0f14;
+  --color-surface: #161920;
+  --color-surface2: #1e2128;
+  --color-border: #2a2d3a;
+  --color-primary: #e63946;
+  --color-primary-muted: #9b2335;
+  --color-accent: #4f8ef7;
+  --color-text: #e8eaf0;
+  --color-muted: #8b90a0;
+  --color-positive: #4caf82;
+  --color-negative: #e63946;
+  --color-chart1: #4f8ef7;
+  --color-chart2: #e63946;
+  --color-chart3: #4caf82;
+  --color-chart4: #f4a261;
+  --color-chart5: #9b59b6;
+  --color-chart6: #f4d03f;
+  --color-chart7: #1abc9c;
+  --color-chart8: #e67e22;
+  --color-chart9: #3498db;
+  --color-chart10: #e91e63;
+  --color-chart11: #00bcd4;
+  --color-chart12: #8bc34a;
+  --color-chart13: #ff5722;
+  --color-chart14: #3790a9;
+  --color-chart15: #4e1c62;
+
+  /* gaps/padding */
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-s: clamp(0.5rem, 1vw, 1rem);
+  --space-m: clamp(1rem, 2vw, 1.5rem);
+  --space-l: clamp(1.5rem, 3vw, 2.5rem);
+  --space-xl: clamp(2rem, 5vw, 4rem);
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+}
+
+.col{
+  display: flex;
+  flex-direction: column;
+}
+
+.h1 {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+.h2 {
+  font-size: clamp(1.1rem, 2.5vw, 2rem);
+}
+.h3 {
+  font-size: clamp(0.95rem, 1.8vw, 1.5rem);
+}
+.text {
+  font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+}

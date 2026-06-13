@@ -1,0 +1,18 @@
+.header{
+    justify-content: space-between;
+    padding: var(--space-m);
+    background-color: var(--color-surface2);
+}
+
+.headerBtnBox{
+    gap: var(--space-s);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.active{
+    color: var(--color-primary);
+}
