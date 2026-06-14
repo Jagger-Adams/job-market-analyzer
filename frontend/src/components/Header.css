@@ -1,7 +1,9 @@
-.header{
+.header {
     justify-content: space-between;
-    padding: var(--space-m);
+    align-items: center;
+    padding: 0 var(--space-m);
     background-color: var(--color-surface2);
+    height: var(--header-height);
 }
 
 .headerBtnBox{

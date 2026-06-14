@@ -61,6 +61,8 @@ code {
   --space-m: clamp(1rem, 2vw, 1.5rem);
   --space-l: clamp(1.5rem, 3vw, 2.5rem);
   --space-xl: clamp(2rem, 5vw, 4rem);
+
+  --header-height: 10vh;
 }
 
 .row{
