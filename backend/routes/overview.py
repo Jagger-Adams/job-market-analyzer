@@ -5,7 +5,6 @@ router = APIRouter()
 
 @router.get("/overview")
 def get_overview(request: Request):
-    return {"the api updates": "work"}
     cur = request.app.state.conn.cursor()
     today = date.today()
     yearMonth = (today.replace(day=1) - timedelta(days=1)).strftime("%Y-%m")
