@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from backend.db import get_conn, close_conn
+from fastapi.middleware.cors import CORSMiddleware
 from backend.routes import overview, trends, explore, roles
 
 @asynccontextmanager
@@ -10,6 +11,13 @@ async def lifespan(app: FastAPI):
     close_conn(app.state.conn)
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(overview.router)
 app.include_router(trends.router)
