@@ -12,6 +12,10 @@
   font-style: normal;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: 'Atkinson Hyperlegible';
@@ -76,14 +80,43 @@ code {
 }
 
 .h1 {
-  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
 }
 .h2 {
-  font-size: clamp(1.1rem, 2.5vw, 2rem);
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
 }
 .h3 {
-  font-size: clamp(0.95rem, 1.8vw, 1.5rem);
+  font-size: clamp(0.85rem, 1.3vw, 1.2rem);
 }
 .text {
-  font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+  font-size: clamp(0.75rem, 0.9vw, 1rem);
+}
+
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fadeIn {
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: calc(var(--i) * 0.1s);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-surface);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary-muted);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
 }

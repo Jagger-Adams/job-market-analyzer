@@ -1,7 +1,10 @@
 import './Overview.css'
 import {useState, useEffect} from 'react'
 
-import Loader from '../components/Loader';
+import Loader from '../components/Loader'
+import CustomPieChart from '../components/CustomPieChart'
+import IndustryTable from '../components/IndustryTable'
+
 
 
 export default function Overview() {
@@ -12,8 +15,10 @@ export default function Overview() {
   useEffect(() => {
           async function fetchData() {
             const response = await fetch(url);
-            const json = await response.json();
-            console.log(json);
+            const [json] = await Promise.all([
+                fetch(url).then(r => r.json()),
+                new Promise(resolve => setTimeout(resolve, 1200))
+            ]);
             setData(json);
             setLoading(false);
           }
@@ -24,14 +29,43 @@ export default function Overview() {
     <div className='overviewRoot'>
       {loading ?
         <Loader text='Fetching latest Data' /> :
-        <div>
-          <OverviewContent data={data} />
-        </div>
+        <OverviewContent data={data} />
       }
     </div>
   );
 }
 
 function OverviewContent({ data }) {
-    return <div>data</div>;
+  const date = new Date();
+  date.setMonth(date.getMonth() - 1);
+  const yearMonth = date.toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
+  return (
+    <div className='overviewContent col'>
+        <div className='overviewHeader col fadeIn' style={{'--i': 1}}>
+          <span className='h1'>Canadian job market</span>
+          <span className='h3'>{yearMonth} - Most recent data</span>
+        </div>
+        <div className='overviewCards row fadeIn' style={{'--i': 2}}>
+          <OverviewCard title="Postings this month" value={Math.round(data["posting_count"]).toLocaleString()} />
+          <OverviewCard title="Avg annual salary" value={"$" + Math.round(data["average_salary"]).toLocaleString()} />
+          <OverviewCard title="Full-time %" value={Math.round(data["fulltime_percent"]) + "%"} />
+          <OverviewCard title="Permanent %" value={Math.round(data["permanent_percent"]) + "%"} />
+          <OverviewCard title="Top industry" value={data['top_industries'][0].industry} />
+        </div>
+        <div className='overviewBody row fadeIn' style={{'--i': 3}}>
+          <CustomPieChart data={data['province_postings']} dataKey="postings" nameKey="province" title='Postings by province' />
+          <IndustryTable data={data['top_industries']} />
+        </div>
+    </div>
+  );
+}
+
+
+function OverviewCard({title, value}){
+  return(
+    <div className='overviewCard col'>
+      <span className='h3 overviewCardHeader' >{title}</span>
+      <span className='h1' style={{color: title.includes("salary") ? "var(--color-positive)" : "var(--color-txt)"}}>{value}</span>
+    </div>
+  )
 }

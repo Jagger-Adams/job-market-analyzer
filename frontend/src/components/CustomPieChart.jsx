@@ -22,22 +22,22 @@ export default function CustomPieChart({ data, dataKey, nameKey, title }) {
     const lines = title ? title.split(' ') : [];
     return (
         <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
+            <PieChart margin={{ top: 20, right: 60, bottom: 20, left: 60 }}>
                 <Pie
                     data={data}
                     dataKey={dataKey}
                     nameKey={nameKey}
                     cx="50%"
                     cy="50%"
-                    innerRadius="60%"
-                    outerRadius="90%"
+                    innerRadius="50%"
+                    outerRadius="70%"
                     strokeWidth={0}
                     label={({ name, percent }) => percent > 0.05 ? name : ''}
-                    labelLine={true}
+                    labelLine={false}
                 >
                     <Label content={({ viewBox }) => {
                         const { cx, cy } = viewBox;
-                        const fontSize = cx * 0.035;
+                        const fontSize = cx * 0.08;
                         const lineHeight = fontSize * 1.4;
                         return (
                             <text x={cx} textAnchor="middle" fill="var(--color-text)" fontWeight="bold" fontSize={fontSize}>

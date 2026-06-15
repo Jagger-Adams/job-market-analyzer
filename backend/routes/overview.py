@@ -44,7 +44,7 @@ def get_overview(request: Request):
                         FROM monthly_aggregates WHERE year_month = %s
                         GROUP BY industry_category
                     ) prev USING (industry_category)
-                    ORDER BY postings DESC LIMIT 5
+                    ORDER BY postings DESC LIMIT 10
                 """, (yearMonth, prevMonth))
     result = cur.fetchall()
     topIndustries = [{"industry": str(r[0]), 'postings': int(r[1]), "percent_change": float(r[2]) if r[2] is not None else None} for r in result]

@@ -1,3 +1,48 @@
-.overviewRoot{
-    
+.overviewRoot {
+    width: 100%;
+    height: 100%;
+}
+
+.overviewContent {
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    max-height: calc(100vh - var(--header-height));
+    padding: var(--space-m);
+    gap: var(--space-xs);
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.overviewCards{
+    justify-content: center;
+    gap: var(--space-m);
+}
+
+.overviewCard{
+    background-color: var(--color-surface);
+    padding: var(--space-s);
+    border-radius: 12px;
+    width: 15%;
+    justify-content: space-between;
+}
+
+.overviewCardHeader{
+    color: var(--color-muted);
+}
+
+.overviewBody {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-m);
+    align-items: center;
+    min-height: 0;
+}
+
+
+.overviewBody > * {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    max-width: 50%;
 }
