@@ -32,15 +32,9 @@ code {
 
 :root {
   /* color scheme */
-  --color-bg: #0d0f14;
-  --color-surface: #161920;
-  --color-surface2: #1e2128;
-  --color-border: #2a2d3a;
   --color-primary: #e63946;
   --color-primary-muted: #9b2335;
   --color-accent: #4f8ef7;
-  --color-text: #e8eaf0;
-  --color-muted: #8b90a0;
   --color-positive: #4caf82;
   --color-negative: #e63946;
   --color-chart1: #4f8ef7;
@@ -69,6 +63,24 @@ code {
   --header-height: 10vh;
 }
 
+[data-theme="dark"] {
+  --color-bg: #0d0f14;
+  --color-surface: #161920;
+  --color-surface2: #1e2128;
+  --color-border: #2a2d3a;
+  --color-text: #e8eaf0;
+  --color-muted: #8b90a0;
+}
+
+[data-theme="light"] {
+  --color-bg: #f0f2f5;
+  --color-surface: #ffffff;
+  --color-surface2: #e4e7ec;
+  --color-border: #d0d4de;
+  --color-text: #1a1d26;
+  --color-muted: #6b7280;
+}
+
 .row{
   display: flex;
   flex-direction: row;
@@ -80,16 +92,22 @@ code {
 }
 
 .h1 {
-  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
 }
 .h2 {
-  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
 }
 .h3 {
-  font-size: clamp(0.85rem, 1.3vw, 1.2rem);
+  font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+}
+.h4 {
+  font-size: clamp(0.85rem, 1.0vw, 1.05rem);
+}
+.h5 {
+  font-size: clamp(0.75rem, 0.8vw, 0.9rem);
 }
 .text {
-  font-size: clamp(0.75rem, 0.9vw, 1rem);
+  font-size: clamp(0.65rem, 0.7vw, 0.8rem);
 }
 
 

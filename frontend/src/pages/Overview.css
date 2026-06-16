@@ -8,13 +8,13 @@
     height: calc(100vh - var(--header-height));
     max-height: calc(100vh - var(--header-height));
     padding: var(--space-m);
-    gap: var(--space-xs);
+    gap: var(--space-m);
     box-sizing: border-box;
     overflow: hidden;
 }
 
 .overviewCards{
-    justify-content: center;
+    justify-content: space-between;
     gap: var(--space-m);
 }
 
@@ -22,8 +22,9 @@
     background-color: var(--color-surface);
     padding: var(--space-s);
     border-radius: 12px;
-    width: 15%;
+    width: 20%;
     justify-content: space-between;
+    gap: var(--space-xs);
 }
 
 .overviewCardHeader{
@@ -45,4 +46,22 @@
     min-width: 0;
     min-height: 0;
     max-width: 50%;
+}
+
+.overviewHeader{
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sourceBox{
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.sourceCapsule{
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-muted);
+    padding: var(--space-xs);
+    cursor: pointer;
 }

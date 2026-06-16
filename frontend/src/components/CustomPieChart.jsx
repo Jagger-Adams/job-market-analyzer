@@ -29,8 +29,8 @@ export default function CustomPieChart({ data, dataKey, nameKey, title }) {
                     nameKey={nameKey}
                     cx="50%"
                     cy="50%"
-                    innerRadius="50%"
-                    outerRadius="70%"
+                    innerRadius="70%"
+                    outerRadius="95%"
                     strokeWidth={0}
                     label={({ name, percent }) => percent > 0.05 ? name : ''}
                     labelLine={false}

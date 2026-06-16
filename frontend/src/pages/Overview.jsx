@@ -41,9 +41,17 @@ function OverviewContent({ data }) {
   const yearMonth = date.toLocaleDateString('en-CA', { month: 'long', year: 'numeric' });
   return (
     <div className='overviewContent col'>
-        <div className='overviewHeader col fadeIn' style={{'--i': 1}}>
-          <span className='h1'>Canadian job market</span>
-          <span className='h3'>{yearMonth} - Most recent data</span>
+        <div className='overviewHeader row fadeIn' style={{'--i': 1}}>
+          <div className='col fadeIn'>
+            <span className='h1'>Canadian job market</span>
+            <span className='h3'>{yearMonth} - Most recent data</span>
+          </div>
+          <div className='sourceBox col'>
+            <span className='h5' style={{color: "var(--color-muted)"}}>Source</span>
+            <a href="https://open.canada.ca/data/en/dataset/ea639e28-c0fc-48bf-b5dd-b8899bd43072" className='sourceCapsule h4'>
+              ⛃ Canada Job Bank Open Data
+            </a>
+          </div>
         </div>
         <div className='overviewCards row fadeIn' style={{'--i': 2}}>
           <OverviewCard title="Postings this month" value={Math.round(data["posting_count"]).toLocaleString()} />
