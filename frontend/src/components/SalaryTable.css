@@ -1,14 +1,21 @@
 .salaryTable{
+    flex: 2;
     gap: var(--space-xs);
     background-color: var(--color-surface);
-    padding: var(--space-s);
+    padding: var(--space-s) var(--space-xs) var(--space-s) var(--space-s);
     border-radius: 8px;
     border: 2px solid var(--color-border);
     color: var(--color-text);
 }
 
+.salaryTableTitle{
+    font-weight: bold;
+}
+
 .salaryTableBody{
     gap: var(--space-xs);
+    overflow-y: auto;
+    padding-right: var(--space-xs);
 }
 
 .salaryLabel{
@@ -24,6 +31,6 @@
 .progressBarChild {
     display: block;
     background-color: var(--color-accent);
-    height: 8px;
+    height: 6px;
     border-radius: 4px;
 }

@@ -1,14 +1,23 @@
 .rolesTable{
+    flex: 3;
     gap: var(--space-xs);
     background-color: var(--color-surface);
-    padding: var(--space-s);
+    padding: var(--space-s) var(--space-xs) var(--space-s) var(--space-s);
     border-radius: 8px;
     border: 2px solid var(--color-border);
     color: var(--color-text);
 }
 
+.rolesTableTitle{
+    font-weight: bold;
+}
+
 .rolesTableBody{
     gap: var(--space-xs);
+    flex: 1;
+    justify-content: space-between;
+    overflow-y: auto;
+    padding-right: var(--space-xs);
 }
 
 .rolesTableRow{

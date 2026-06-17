@@ -4,7 +4,7 @@ export default function SalaryTable({data}) {
     const maxSalary = Math.max(...data.map(item => item.salary));
     return(
     <div className="salaryTable col">
-        <span className='h2 salaryTableTitle'>Salary by subcategory</span>
+        <span className='h3 salaryTableTitle'>Salary by subcategory</span>
         <div className='salaryTableBody col'>
             {data.map((record) => {
                 return <SalaryTableRow  record={record} maxSalary={maxSalary}/>
@@ -19,8 +19,8 @@ function SalaryTableRow({record, maxSalary}) {
     const pct = Math.max(1, (record.salary / maxSalary) * 100 - 5)
     return(
         <div className='salaryRow col'>
-            <span className='h3'>{record.subcategory}</span>
-            <span className='h2 salaryLabel'>${record.salary}</span>
+            <span className='h4'>{record.subcategory}</span>
+            <span className='h3 salaryLabel'>${record.salary}</span>
             <ProgressBar percent={pct} />
         </div>
     );
