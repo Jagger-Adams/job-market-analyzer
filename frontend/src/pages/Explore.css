@@ -1,0 +1,185 @@
+.exploreRoot {
+    height: calc(100vh - var(--header-height));
+    box-sizing: border-box;
+    padding: var(--space-s);
+}
+
+.wizard{
+    padding: var(--space-m);
+    gap: var(--space-s);
+    background-color: var(--color-surface);
+    border-radius: 8px;;
+}
+
+.steps{
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.stepNode {
+  width: 2.4rem;
+  height: 2.4rem;          
+  border-radius: 50%;       
+  display: flex;
+  align-items: center;      
+  justify-content: center;  
+  background-color: var(--color-border);
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.completeNode{
+    background-color: var(--color-primary);
+    color: var(--color-bg)
+}
+
+.stepLine{
+    flex:1;
+    height: 2px;
+}
+
+.filterButtons{
+    width: 100%;
+    justify-content: space-between;
+}
+
+.backBtn, .nextBtn {
+    padding: var(--space-xs) var(--space-s); 
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.nextBtn{
+    align-self: flex-end;
+    background-color: var(--color-primary);
+    color: var(--color-bg);
+}
+
+.seriesSelector { 
+    width: 100%; 
+    gap: var(--space-m);
+}
+
+.seriesOptions{
+    flex: 1;
+    gap: var(--space-xs);
+}
+
+.selectedSeries{
+    gap: var(--space-xs);
+    flex: 1;
+}
+
+.exploreSearchBox{
+    width: 100%;
+    border: 2px solid var(--color-border);
+    padding: 0.5vh;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.exploreSearch{
+    background-color: var(--color-surface);
+    flex: 1;
+    border: none;
+}
+
+.exploreSearch:focus{
+    outline: none;
+}
+
+.selectedHeader{
+    align-items: center;
+    gap: var(--space-xs);
+    justify-content: space-between;
+}
+
+.selectedSeriesTitle{
+    gap: var(--space-xs);
+}
+
+.selectedCounter{
+    background-color: var(--color-surface2);
+    padding: var(--space-xs);
+    border-radius: 8px;
+}
+
+.clearAll {
+  cursor: pointer;
+  color: var(--color-primary);
+}
+.clearAll:hover {
+  text-decoration: underline;
+}
+
+.seriesOptionsBody {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+  align-content: start;
+  height: 150px;
+  overflow-y: auto;
+  padding: var(--space-xs);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.seriesOption{
+  display: flex;
+  align-items: center;
+  height: 2rem;
+  padding: 0 var(--space-s);
+  border-radius: 6px;
+  background-color: var(--color-surface2);
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.seriesOption:hover{
+  background-color: var(--color-border);
+}
+
+.selectedBody {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+  align-content: start;
+  height: 150px;
+  overflow-y: auto;
+  padding: var(--space-xs);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.seriesDot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.seriesPill{
+    height: 2rem;
+    background-color: var(--color-surface2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    align-items: center;
+    padding: 0 var(--space-s);
+    gap: var(--space-xs);
+    overflow: hidden;
+}
+
+.seriesPill > span:nth-child(2){
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.pillRemove{
+    margin-left: auto;
+    cursor: pointer;
+    flex-shrink: 0;
+}
