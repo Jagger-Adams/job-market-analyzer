@@ -127,7 +127,7 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-surface);
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -137,4 +137,16 @@ code {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-primary);
+}
+
+input[type='range'] {
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+[data-theme="dark"] .dateInput::-webkit-calendar-picker-indicator {
+  filter: invert(1);     
+}
+[data-theme="light"] .dateInput::-webkit-calendar-picker-indicator {
+  filter: invert(0);     
 }

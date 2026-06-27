@@ -5,15 +5,23 @@
 }
 
 .wizard{
+    height: 70%;
     padding: var(--space-m);
     gap: var(--space-s);
     background-color: var(--color-surface);
-    border-radius: 8px;;
+    border-radius: 8px;
+}
+
+.filterBody{
+    flex: 1;
+    align-items: stretch;
+    min-height: 0;
 }
 
 .steps{
     align-items: center;
     gap: var(--space-xs);
+    flex-shrink: 0;
 }
 
 .stepNode {
@@ -40,13 +48,16 @@
 
 .filterButtons{
     width: 100%;
+    height: 2.5rem; 
     justify-content: space-between;
+    flex-shrink: 0;
 }
 
 .backBtn, .nextBtn {
     padding: var(--space-xs) var(--space-s); 
     border: 2px solid var(--color-border);
     border-radius: 8px;
+    cursor: pointer;
 }
 
 .nextBtn{
@@ -55,7 +66,10 @@
     color: var(--color-bg);
 }
 
+
 .seriesSelector { 
+    height: 100%;
+    min-height: 0;
     width: 100%; 
     gap: var(--space-m);
 }
@@ -117,7 +131,7 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-xs);
   align-content: start;
-  height: 150px;
+  flex: 1;
   overflow-y: auto;
   padding: var(--space-xs);
   border: 1px solid var(--color-border);
@@ -147,7 +161,6 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--space-xs);
   align-content: start;
-  height: 150px;
   overflow-y: auto;
   padding: var(--space-xs);
   border: 1px solid var(--color-border);
@@ -182,4 +195,108 @@
     margin-left: auto;
     cursor: pointer;
     flex-shrink: 0;
+}
+
+.filterSelector{
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    gap: var(--space-l);
+    padding: var(--space-m);
+}
+
+
+.jobFilters{
+    flex: 1;                          
+    justify-content: space-evenly;    
+    align-items: stretch;
+}
+
+.rangeSelector {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-s);
+}
+
+.dateInput {
+    padding: var(--space-xs) var(--space-s);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.dateArrow {
+    color: var(--color-muted);
+}
+
+.filtersLeft, .filtersRight{
+    width: 40%;
+    gap: var(--space-s);
+}
+
+.filterInput{
+    gap: var(--space-xs);
+}
+
+.selector{
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: clip;
+}
+
+.selectorOption, .selectedType{
+    flex: 1;
+    padding: var(--space-xs);
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+}
+
+.selectorOption{
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.selectedType{
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.salHeader{
+    justify-content: space-between;
+}
+
+.filterInput select{
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: var(--space-xs) var(--space-s);
+    font-family: inherit;     
+    cursor: pointer;
+}
+
+.filterInput select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.visualizer{
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.visualizeBtn, .editFilterBtn{
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-s); 
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-primary);
+    color: var(--color-bg);
 }
