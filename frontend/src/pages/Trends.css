@@ -85,5 +85,6 @@
 }
 .industryTables {
     flex: 2;
+    gap: var(--space-s);
     min-height: 0;
 }

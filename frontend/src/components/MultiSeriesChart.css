@@ -1,0 +1,38 @@
+.mscWrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    gap: var(--space-s);
+}
+
+.mscToggle {
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+    width: fit-content;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: clip;
+}
+
+.mscToggleOption {
+    padding: var(--space-xs) var(--space-m);
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.mscToggleActive {
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+}
+
+.mscChartArea {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+}

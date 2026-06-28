@@ -1,5 +1,6 @@
 import './Explore.css'
 import Loader from '../components/Loader';
+import MultiSeriesChart from '../components/MultiSeriesChart';
 import {useState, useEffect} from 'react'
 
 const CHART_COLORS = [
@@ -73,13 +74,13 @@ export default function Explore() {
     <div className='exploreRoot col'>
       {loading ? <Loader text='Loading industries' /> : (
         showChart ? (
-          <div className='col' >
+          <div className='col chartViewWrapper' >
             <button className='editFilterBtn' onClick={() => setShowChart(false)} > ← Edit filters </button>
             <ChartView series={series} filters={filters}/>
           </div>
         ) : (
           <div className='wizard col'>
-            <div className='steps row'>
+            <div className='steps row fadeIn' style={{'--i': 1}}>
               <span className={step >= 1 ? 'stepNode completeNode h2':'stepNode h2'}>{step > 1 ? '✔':'1'}</span>
               <span className='h2'>Series</span>
               <div className="stepLine" style={{backgroundColor: step > 1 ? "var(--color-primary)" : "var(--color-border)" }}/>
@@ -89,7 +90,7 @@ export default function Explore() {
               <span className={step >= 3 ? 'stepNode completeNode h2':'stepNode h2'}>3</span>
               <span className='h2'>Visualize</span>
             </div>
-            <div className='filterBody row'>
+            <div className='filterBody row fadeIn' style={{'--i': 2}}>
               {step == 1 ?
                 <SeriesSelector industries={industries} series={series} setSeries={setSeries} /> :
                 step == 2 ?
@@ -97,7 +98,7 @@ export default function Explore() {
                   <Visualizer series={series} filters={filters} setShowChart={setShowChart} />
               }
             </div>
-            <div className='filterButtons row'>
+            <div className='filterButtons row fadeIn' style={{'--i': 3}}>
               <button
                 className='backBtn h3'
                 style={{ visibility: step > 1 ? 'visible' : 'hidden' }}
@@ -298,9 +299,7 @@ function Visualizer({series, filters, setShowChart}) {
   if (loading) return <Loader text='Building your chart' />;
 
   return (
-    <div className='chartView col'>
-      
-    </div>
+    <MultiSeriesChart data={data} yLabel='Postings' xLabel='Month' />
   );
 }
 

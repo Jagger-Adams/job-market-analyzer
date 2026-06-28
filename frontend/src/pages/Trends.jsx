@@ -55,8 +55,8 @@ function TrendsContent({industries}) {
           onChange={(e) => setSearch(e.target.value)} />
         </div>
         <div className='industryOptions col'>
-          {visible.map(ind => (
-            <span key={ind} className={ind == industry ? 'industryOption selectedInd' : 'industryOption'} onClick={() => setIndustry(ind)}>{ind}</span>
+          {visible.map((ind, i) => (
+            <span key={ind} className={ind == industry ? 'industryOption selectedInd fadeIn' : 'industryOption fadeIn'} onClick={() => setIndustry(ind)} style={{'--i': i}}>{ind}</span>
           ))}
         </div>
       </div>
@@ -92,7 +92,7 @@ function TrendsBody({industry}) {
           <div className='chartWrap'>
             <TrendChart data={data.trend} xLabel='Month' yLabel='Postings' />
           </div>
-          <div className='industryTables row'>
+          <div className='industryTables row fadeIn' style={{'--i': 1}}>
             <RolesTable data={data.growing_roles}/>
             <SalaryTable data={data.subcategory_salaries}/>
           </div>

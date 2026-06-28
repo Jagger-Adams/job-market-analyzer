@@ -37,21 +37,21 @@ code {
   --color-accent: #4f8ef7;
   --color-positive: #4caf82;
   --color-negative: #e63946;
-  --color-chart1: #4f8ef7;
-  --color-chart2: #e63946;
-  --color-chart3: #4caf82;
-  --color-chart4: #f4a261;
-  --color-chart5: #9b59b6;
-  --color-chart6: #f4d03f;
-  --color-chart7: #1abc9c;
-  --color-chart8: #e67e22;
-  --color-chart9: #3498db;
-  --color-chart10: #e91e63;
-  --color-chart11: #00bcd4;
-  --color-chart12: #8bc34a;
-  --color-chart13: #ff5722;
-  --color-chart14: #3790a9;
-  --color-chart15: #4e1c62;
+  --color-chart1: #4f8ef7;   
+  --color-chart2: #7619ce;   
+  --color-chart3: #27bb53;  
+  --color-chart4: #d31c6c;  
+  --color-chart5: #24229b;  
+  --color-chart6: #ffcc00;   
+  --color-chart7: #0a4963;  
+  --color-chart8: #69b4ff;   
+  --color-chart9: #21b12b;  
+  --color-chart10: #3f51b5; 
+  --color-chart11: #8bc34a;  
+  --color-chart12: #607d8b;  
+  --color-chart13: #16a085;  
+  --color-chart14: #d35400;  
+  --color-chart15: #6d214f;  
 
   /* gaps/padding */
   --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);

@@ -48,7 +48,7 @@ function OverviewContent({ data }) {
           </div>
           <div className='sourceBox col'>
             <span className='h5' style={{color: "var(--color-muted)"}}>Source</span>
-            <a href="https://open.canada.ca/data/en/dataset/ea639e28-c0fc-48bf-b5dd-b8899bd43072" className='sourceCapsule h4'>
+            <a href="https://open.canada.ca/data/en/dataset/ea639e28-c0fc-48bf-b5dd-b8899bd43072" target="_blank" className='sourceCapsule h4'>
               ⛃ Canada Job Bank Open Data
             </a>
           </div>
