@@ -21,7 +21,7 @@ def main():
     #Hit Canada Job Bank API endpoint to fetch posting metadata
     response = requests.get('https://open.canada.ca/data/api/3/action/package_show?id=ea639e28-c0fc-48bf-b5dd-b8899bd43072')
 
-    cutoff = (datetime.now() - timedelta(days=365*2)).strftime("%Y-%m")
+    cutoff = (datetime.now() - timedelta(days=365*10)).strftime("%Y-%m")
 
     for posting in response.json()['result']['resources']:
         if posting['language'] != ['en'] or not posting['url']: continue
@@ -121,6 +121,7 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
         rp.noc21_code,
         rp.noc21_name,
         industry_category,
+        nc.subcategory,
         province,
         count(*) as posting_count,
         sum(vacancy_count) as total_vacancies,
@@ -142,6 +143,7 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
         rp.noc21_code,
         rp.noc21_name,
         industry_category,
+        nc.subcategory,
         province
     """
 
@@ -155,6 +157,7 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
                 "                          noc21_code, " \
                 "                          noc21_name, " \
                 "                          industry_category, " \
+                "                          subcategory," \
                 "                          province, " \
                 "                          posting_count," \
                 "                          total_vacancies," \

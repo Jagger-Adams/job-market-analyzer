@@ -29,6 +29,7 @@ CREATE INDEX idx_raw_noc       ON raw_postings(noc21_code);
 CREATE INDEX idx_raw_province  ON raw_postings(province);
 CREATE INDEX idx_raw_date      ON raw_postings(first_posting_date);
 CREATE INDEX idx_raw_composite ON raw_postings(noc21_code, province, first_posting_date);
+CREATE INDEX idx_raw_batch ON raw_postings(import_batch_id);
 
 CREATE TABLE monthly_aggregates (
     id                  SERIAL PRIMARY KEY,
