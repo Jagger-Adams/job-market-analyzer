@@ -141,7 +141,19 @@ def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
         SELECT
             *,
             CASE
-                ...
+                WHEN salary_per = 'Hour' AND (salary_min_raw + salary_max_raw) / 2 * 40 * 52 BETWEEN 15000 AND 500000
+                    THEN (salary_min_raw + salary_max_raw) / 2 * 40 * 52
+                WHEN salary_per = 'Day' AND (salary_min_raw + salary_max_raw) / 2 * 5 * 52 BETWEEN 15000 AND 500000
+                    THEN (salary_min_raw + salary_max_raw) / 2 * 5 * 52
+                WHEN salary_per = 'Week' AND (salary_min_raw + salary_max_raw) / 2 * 52 BETWEEN 15000 AND 500000
+                    THEN (salary_min_raw + salary_max_raw) / 2 * 52
+                WHEN salary_per = 'Bi-Weekly' AND (salary_min_raw + salary_max_raw) / 2 * 26 BETWEEN 15000 AND 500000
+                    THEN (salary_min_raw + salary_max_raw) / 2 * 26
+                WHEN salary_per = 'Month' AND (salary_min_raw + salary_max_raw) / 2 * 12 BETWEEN 15000 AND 500000
+                    THEN (salary_min_raw + salary_max_raw) / 2 * 12
+                WHEN salary_per = 'Year' AND (salary_min_raw + salary_max_raw) / 2 BETWEEN 15000 AND 500000
+                    THEN (salary_min_raw + salary_max_raw) / 2
+                ELSE NULL
             END as annual_salary
         FROM raw_postings
         )
