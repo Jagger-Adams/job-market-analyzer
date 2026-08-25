@@ -21,6 +21,9 @@ def main():
     #Hit Canada Job Bank API endpoint to fetch posting metadata
     response = requests.get('https://open.canada.ca/data/api/3/action/package_show?id=ea639e28-c0fc-48bf-b5dd-b8899bd43072')
 
+    #Get industry and subcategory prefixes from DB lookup table
+    industry_map, subcat_map = load_category_maps(cur)
+
     cutoff = (datetime.now() - timedelta(days=365*10)).strftime("%Y-%m")
 
     for posting in response.json()['result']['resources']:
@@ -41,14 +44,31 @@ def main():
             filepath = f"scripts/{yearMonth}_data.csv"
             with open(filepath, "wb") as f:
                 f.write(response.content)
-            saveToDatabase(yearMonth, filepath, cur, conn)
+            saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map)
 
     pruneData(cutoff, cur, conn)
 
+def load_category_maps(cur):
+    cur.execute("""
+        SELECT nc.code, i.id
+        FROM noc_classification nc
+        JOIN industries i ON i.name = nc.class_title
+        WHERE nc.level = '1'
+    """)
+    industry_map = {code: iid for code, iid in cur.fetchall()}
 
+    cur.execute("""
+        SELECT nc.code, s.id
+        FROM noc_classification nc
+        JOIN subcategories s ON s.name = nc.class_title
+        WHERE nc.level = '4'
+    """)
+    subcat_map = {code: sid for code, sid in cur.fetchall()}
+
+    return industry_map, subcat_map
         
 # Check DB and parse csv and save to DB
-def saveToDatabase(yearMonth, filepath, cur, conn):
+def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
     cur.execute("INSERT INTO import_batches (year_month, source_file) VALUES (%s, %s) RETURNING id", (yearMonth, filepath))
     batch_id = cur.fetchone()[0]
 
@@ -95,6 +115,27 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
     conn.commit()
 
 
+    cur.execute("""
+        SELECT DISTINCT noc21_code, noc21_name
+        FROM raw_postings
+        WHERE import_batch_id = %s AND noc21_code IS NOT NULL
+    """, (batch_id,))
+    codes = cur.fetchall()
+
+    resolved = []
+    for code, name in codes:
+        industry_id = industry_map.get(code[0])
+        subcategory_id = subcat_map.get(code[:4])
+        if not industry_id or not subcategory_id:
+            print(f"Warning: no category mapping for noc21_code {code}")
+        resolved.append((code, name, industry_id, subcategory_id))
+
+    execute_values(cur,
+        "INSERT INTO noc_categories (noc21_code, noc21_name, industry_id, subcategory_id) VALUES %s "
+        "ON CONFLICT (noc21_code) DO NOTHING",
+        resolved)
+    conn.commit()
+
     query = """
         WITH normalized AS (
         SELECT
@@ -120,8 +161,6 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
         year_month,
         rp.noc21_code,
         rp.noc21_name,
-        industry_category,
-        nc.subcategory,
         province,
         count(*) as posting_count,
         sum(vacancy_count) as total_vacancies,
@@ -131,10 +170,6 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
         AVG(CASE WHEN employment_term = 'Permanent employment' THEN 1.0 ELSE 0 END) as pct_permanent,
         AVG(CASE WHEN telework = TRUE THEN 1.0 ELSE 0 END) as pct_telework
     from normalized rp 
-    join import_batches ib on
-        rp.import_batch_id = ib.id
-    left join noc_categories nc on 
-        rp.noc21_code = nc.noc21_code
     where 
         rp.import_batch_id=%s AND
         rp.noc21_code IS NOT NULL
@@ -142,8 +177,6 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
         year_month,
         rp.noc21_code,
         rp.noc21_name,
-        industry_category,
-        nc.subcategory,
         province
     """
 
@@ -156,8 +189,6 @@ def saveToDatabase(yearMonth, filepath, cur, conn):
                 "                          year_month," \
                 "                          noc21_code, " \
                 "                          noc21_name, " \
-                "                          industry_category, " \
-                "                          subcategory," \
                 "                          province, " \
                 "                          posting_count," \
                 "                          total_vacancies," \
