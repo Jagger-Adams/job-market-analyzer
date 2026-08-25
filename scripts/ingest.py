@@ -141,46 +141,33 @@ def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
         SELECT
             *,
             CASE
-                WHEN salary_per = 'Hour' AND (salary_min_raw + salary_max_raw) / 2 * 40 * 52 BETWEEN 15000 AND 500000
-                    THEN (salary_min_raw + salary_max_raw) / 2 * 40 * 52
-                WHEN salary_per = 'Day' AND (salary_min_raw + salary_max_raw) / 2 * 5 * 52 BETWEEN 15000 AND 500000
-                    THEN (salary_min_raw + salary_max_raw) / 2 * 5 * 52
-                WHEN salary_per = 'Week' AND (salary_min_raw + salary_max_raw) / 2 * 52 BETWEEN 15000 AND 500000
-                    THEN (salary_min_raw + salary_max_raw) / 2 * 52
-                WHEN salary_per = 'Bi-Weekly' AND (salary_min_raw + salary_max_raw) / 2 * 26 BETWEEN 15000 AND 500000
-                    THEN (salary_min_raw + salary_max_raw) / 2 * 26
-                WHEN salary_per = 'Month' AND (salary_min_raw + salary_max_raw) / 2 * 12 BETWEEN 15000 AND 500000
-                    THEN (salary_min_raw + salary_max_raw) / 2 * 12
-                WHEN salary_per = 'Year' AND (salary_min_raw + salary_max_raw) / 2 BETWEEN 15000 AND 500000
-                    THEN (salary_min_raw + salary_max_raw) / 2
-                ELSE NULL
+                ...
             END as annual_salary
         FROM raw_postings
-    )
-    select 
-        year_month,
-        rp.noc21_code,
-        rp.noc21_name,
-        province,
-        count(*) as posting_count,
-        sum(vacancy_count) as total_vacancies,
-        avg(annual_salary) as avg_salary_annual,
-        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY annual_salary) AS median_salary,
-        AVG(CASE WHEN employment_type = 'Full time' THEN 1.0 ELSE 0 END) as pct_full_time,
-        AVG(CASE WHEN employment_term = 'Permanent employment' THEN 1.0 ELSE 0 END) as pct_permanent,
-        AVG(CASE WHEN telework = TRUE THEN 1.0 ELSE 0 END) as pct_telework
-    from normalized rp 
-    where 
-        rp.import_batch_id=%s AND
-        rp.noc21_code IS NOT NULL
-    group by
-        year_month,
-        rp.noc21_code,
-        rp.noc21_name,
-        province
+        )
+        select 
+            %s as year_month,
+            rp.noc21_code,
+            rp.noc21_name,
+            province,
+            count(*) as posting_count,
+            sum(vacancy_count) as total_vacancies,
+            avg(annual_salary) as avg_salary_annual,
+            PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY annual_salary) AS median_salary,
+            AVG(CASE WHEN employment_type = 'Full time' THEN 1.0 ELSE 0 END) as pct_full_time,
+            AVG(CASE WHEN employment_term = 'Permanent employment' THEN 1.0 ELSE 0 END) as pct_permanent,
+            AVG(CASE WHEN telework = TRUE THEN 1.0 ELSE 0 END) as pct_telework
+        from normalized rp 
+        where 
+            rp.import_batch_id=%s AND
+            rp.noc21_code IS NOT NULL
+        group by
+            rp.noc21_code,
+            rp.noc21_name,
+            province
     """
 
-    cur.execute(query, (batch_id,))
+    cur.execute(query, (yearMonth, batch_id))
     rows = cur.fetchall()
 
 
