@@ -67,7 +67,7 @@ def load_category_maps(cur):
 
     return industry_map, subcat_map
         
-# Check DB and parse csv and save to DB
+# Check DB, parse csv, and save to DB
 def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
     cur.execute("INSERT INTO import_batches (year_month, source_file) VALUES (%s, %s) RETURNING id", (yearMonth, filepath))
     batch_id = cur.fetchone()[0]
@@ -84,7 +84,7 @@ def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
         for enc in ("utf-16", "utf-8-sig", "cp1252"):
             try:
                 f = open(filepath, encoding=enc)
-                f.read()          # force full decode now, not lazily during iteration
+                f.read()          
                 f.seek(0)
                 return f, enc
             except UnicodeDecodeError:
@@ -101,9 +101,15 @@ def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
         print(f"Decoded {filepath} as {enc}")
         rd = csv.DictReader(file, delimiter="\t", quotechar='"')
         records = []
-        for row in rd:
-            records.append((batch_id, row['WIC Job Location Snapshot ID'], na(row['Job Title']),na(row['NOC21 Code']),na(row['NOC21 Code Name']),na(row['Province/Territory']),na(row['City']),na(row['First Posting Date']),na(row['Vacancy Count']),na(row['Employment Type']),na(row['Employment Term']),na(row['Salary Per']),na(row['Salary Minimum']),na(row['Salary Maximum']),to_bool(row['Employment Term Telework'])))
-
+        try:
+            for row in rd:
+                records.append((batch_id, row['WIC Job Location Snapshot ID'], na(row['Job Title']),na(row['NOC21 Code']),na(row['NOC21 Code Name']),na(row['Province/Territory']),na(row['City']),na(row['First Posting Date']),na(row['Vacancy Count']),na(row['Employment Type']),na(row['Employment Term']),na(row['Salary Per']),na(row['Salary Minimum']),na(row['Salary Maximum']),to_bool(row['Employment Term Telework'])))
+        except KeyError:
+            print(f"Unexpected schema in {filepath}, skipping.")
+            conn.rollback()
+            if os.path.exists(filepath):
+                os.remove(filepath)
+            return
 
     execute_values(cur, 
                 "INSERT INTO raw_postings (import_batch_id," \
