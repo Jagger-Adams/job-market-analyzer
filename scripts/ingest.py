@@ -50,7 +50,7 @@ def main():
 
 def load_category_maps(cur):
     cur.execute("""
-        SELECT nc.code, i.id
+        SELECT LPAD(nc.code, 1, '0'), i.id
         FROM noc_classification nc
         JOIN industries i ON i.name = nc.class_title
         WHERE nc.level = '1'
@@ -58,7 +58,7 @@ def load_category_maps(cur):
     industry_map = {code: iid for code, iid in cur.fetchall()}
 
     cur.execute("""
-        SELECT nc.code, s.id
+        SELECT LPAD(nc.code, 4, '0'), s.id
         FROM noc_classification nc
         JOIN subcategories s ON s.name = nc.class_title
         WHERE nc.level = '4'
@@ -80,7 +80,25 @@ def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
         if val == "No": return False
         else: return None
 
-    with open(filepath, encoding="utf-16") as file:
+    def open_csv(filepath):
+        for enc in ("utf-16", "utf-8-sig", "cp1252"):
+            try:
+                f = open(filepath, encoding=enc)
+                f.read()          # force full decode now, not lazily during iteration
+                f.seek(0)
+                return f, enc
+            except UnicodeDecodeError:
+                continue
+        return None, None
+
+    file, enc = open_csv(filepath)
+    if file is None:
+        conn.rollback()
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        return
+    with file:
+        print(f"Decoded {filepath} as {enc}")
         rd = csv.DictReader(file, delimiter="\t", quotechar='"')
         records = []
         for row in rd:
