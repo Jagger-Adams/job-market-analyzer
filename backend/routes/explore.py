@@ -30,16 +30,18 @@ def explore(
     for ind in series:
         query = f"""
                 SELECT
-                    year_month,
-                    ROUND(SUM(posting_count * {fullTimeRatio} * {permanentRatio}))::int AS postings
-                FROM monthly_aggregates
+                    ma.year_month,
+                    ROUND(SUM(ma.posting_count * {fullTimeRatio} * {permanentRatio}))::int AS postings
+                FROM monthly_aggregates ma
+                JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                JOIN industries i ON nc.industry_id = i.id
                 WHERE
-                    industry_category = %s
-                    AND year_month >= %s AND year_month <= %s
-                    AND (%s IS NULL OR province = %s)
-                    AND (%s IS NULL OR avg_salary_annual >= %s)
-                GROUP BY year_month
-                ORDER BY year_month ASC
+                    i.name = %s
+                    AND ma.year_month >= %s AND ma.year_month <= %s
+                    AND (%s IS NULL OR ma.province = %s)
+                    AND (%s IS NULL OR ma.avg_salary_annual >= %s)
+                GROUP BY ma.year_month
+                ORDER BY ma.year_month ASC
             """
         cur.execute(query, (ind, start_date, end_date, province, province, min_salary, min_salary))
         

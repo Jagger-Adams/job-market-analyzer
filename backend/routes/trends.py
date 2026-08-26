@@ -6,7 +6,7 @@ router = APIRouter()
 @router.get("/industries")
 def get_industries(request: Request):
     cur = request.app.state.conn.cursor()
-    cur.execute("SELECT DISTINCT industry_category FROM monthly_aggregates WHERE industry_category IS NOT NULL ORDER BY industry_category")
+    cur.execute("SELECT name FROM industries ORDER BY name")
     result = cur.fetchall()
     cur.close()
     return [r[0] for r in result]
@@ -22,13 +22,15 @@ def get_trends(request: Request, industry: str = Query(default=None)):
     prevMonth = (today.replace(day=1) - timedelta(days=32)).replace(day=1).strftime("%Y-%m")
     cur.execute("""
                     SELECT
-                        year_month,
-                        SUM(posting_count) AS postings
-                    FROM monthly_aggregates
-                    WHERE industry_category = %s
-                    AND year_month >= %s
-                    GROUP BY year_month
-                    ORDER BY year_month ASC; """, (industry, start))
+                        ma.year_month,
+                        SUM(ma.posting_count) AS postings
+                    FROM monthly_aggregates ma
+                    JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                    JOIN industries i ON nc.industry_id = i.id
+                    WHERE i.name = %s
+                    AND ma.year_month >= %s
+                    GROUP BY ma.year_month
+                    ORDER BY ma.year_month ASC; """, (industry, start))
     result = cur.fetchall()
     response['trend'] = [{'year_month': str(r[0]), 'postings': int(r[1])} for r in result]
 
@@ -37,15 +39,19 @@ def get_trends(request: Request, industry: str = Query(default=None)):
                         curr.role,
                         ROUND(((curr.postings - prev.postings)::numeric / prev.postings) * 100, 1) AS pct_growth
                     FROM
-                        (SELECT noc21_name AS role, SUM(posting_count) AS postings
-                        FROM monthly_aggregates
-                        WHERE industry_category = %s AND year_month = %s
-                        GROUP BY noc21_name) curr
+                        (SELECT ma.noc21_name AS role, SUM(ma.posting_count) AS postings
+                        FROM monthly_aggregates ma
+                        JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                        JOIN industries i ON nc.industry_id = i.id
+                        WHERE i.name = %s AND ma.year_month = %s
+                        GROUP BY ma.noc21_name) curr
                     JOIN
-                        (SELECT noc21_name AS role, SUM(posting_count) AS postings
-                        FROM monthly_aggregates
-                        WHERE industry_category = %s AND year_month = %s
-                        GROUP BY noc21_name) prev
+                        (SELECT ma.noc21_name AS role, SUM(ma.posting_count) AS postings
+                        FROM monthly_aggregates ma
+                        JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                        JOIN industries i ON nc.industry_id = i.id
+                        WHERE i.name = %s AND ma.year_month = %s
+                        GROUP BY ma.noc21_name) prev
                     USING (role)
                     ORDER BY pct_growth DESC
                     LIMIT 5; """, (industry, yearMonth, industry, prevMonth))
@@ -54,11 +60,14 @@ def get_trends(request: Request, industry: str = Query(default=None)):
 
     cur.execute("""
                     SELECT
-                        subcategory,
-                        ROUND(SUM(avg_salary_annual * posting_count)::numeric / SUM(posting_count)) AS salary
-                    FROM monthly_aggregates
-                    WHERE industry_category = %s AND avg_salary_annual IS NOT NULL
-                    GROUP BY subcategory
+                        s.name AS subcategory,
+                        ROUND(SUM(ma.avg_salary_annual * ma.posting_count)::numeric / SUM(ma.posting_count)) AS salary
+                    FROM monthly_aggregates ma
+                    JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                    JOIN industries i ON nc.industry_id = i.id
+                    JOIN subcategories s ON nc.subcategory_id = s.id
+                    WHERE i.name = %s AND ma.avg_salary_annual IS NOT NULL
+                    GROUP BY s.name
                     ORDER BY salary DESC
                     LIMIT 5; """, (industry,))
     result = cur.fetchall()

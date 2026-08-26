@@ -31,19 +31,25 @@ def get_overview(request: Request):
     #fetch top industries
     cur.execute("""
                     SELECT 
-                        curr.industry_category,
+                        curr.industry,
                         curr.postings,
                         ROUND(((curr.postings - prev.postings)::numeric / prev.postings) * 100, 1) AS pct_change
                     FROM (
-                        SELECT industry_category, SUM(posting_count) AS postings
-                        FROM monthly_aggregates WHERE year_month = %s
-                        GROUP BY industry_category
+                        SELECT i.name AS industry, SUM(ma.posting_count) AS postings
+                        FROM monthly_aggregates ma
+                        LEFT JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                        LEFT JOIN industries i ON nc.industry_id = i.id
+                        WHERE ma.year_month = %s
+                        GROUP BY i.name
                     ) curr
                     LEFT JOIN (
-                        SELECT industry_category, SUM(posting_count) AS postings
-                        FROM monthly_aggregates WHERE year_month = %s
-                        GROUP BY industry_category
-                    ) prev USING (industry_category)
+                        SELECT i.name AS industry, SUM(ma.posting_count) AS postings
+                        FROM monthly_aggregates ma
+                        LEFT JOIN noc_categories nc ON ma.noc21_code = nc.noc21_code
+                        LEFT JOIN industries i ON nc.industry_id = i.id
+                        WHERE ma.year_month = %s
+                        GROUP BY i.name
+                    ) prev USING (industry)
                     ORDER BY postings DESC LIMIT 10
                 """, (yearMonth, prevMonth))
     result = cur.fetchall()
