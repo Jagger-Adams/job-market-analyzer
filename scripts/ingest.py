@@ -98,7 +98,7 @@ def saveToDatabase(yearMonth, filepath, cur, conn, industry_map, subcat_map):
             os.remove(filepath)
         return
     with file:
-        print(f"Decoded {filepath} as {enc}")
+        #print(f"Decoded {filepath} as {enc}")
         rd = csv.DictReader(file, delimiter="\t", quotechar='"')
         records = []
         try:
