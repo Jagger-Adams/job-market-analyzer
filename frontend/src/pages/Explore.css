@@ -308,3 +308,19 @@
   height: 100%;
   min-height: 0;
 }
+
+@media (max-width: 768px) {
+    .seriesOptionsBody, .selectedBody{
+        grid-template-columns: 1fr;
+    }
+
+    .jobFilters{
+        flex-direction: column;
+        justify-content: space-evenly;    
+        align-items: center;
+    }
+
+    .filtersRight, .filtersLeft{
+        width: 100%;
+    }
+}

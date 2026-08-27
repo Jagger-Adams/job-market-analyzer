@@ -58,7 +58,7 @@ function OverviewContent({ data }) {
           <OverviewCard title="Avg annual salary" value={"$" + Math.round(data["average_salary"]).toLocaleString()} />
           <OverviewCard title="Full-time %" value={Math.round(data["fulltime_percent"]) + "%"} />
           <OverviewCard title="Permanent %" value={Math.round(data["permanent_percent"]) + "%"} />
-          <OverviewCard title="Top industry" value={data['top_industries'][0].industry} />
+          <OverviewCard title="Top industry" value={data['top_industries'][0].industry} id="topIndustryCard" />
         </div>
         <div className='overviewBody row fadeIn' style={{'--i': 3}}>
           <CustomPieChart data={data['province_postings']} dataKey="postings" nameKey="province" title='Postings by province' />
@@ -69,9 +69,9 @@ function OverviewContent({ data }) {
 }
 
 
-function OverviewCard({title, value}){
+function OverviewCard({title, value, id}){
   return(
-    <div className='overviewCard col'>
+    <div className='overviewCard col' id={id}>
       <span className='h3 overviewCardHeader' >{title}</span>
       <span className='h1' style={{color: title.includes("salary") ? "var(--color-positive)" : "var(--color-txt)"}}>{value}</span>
     </div>

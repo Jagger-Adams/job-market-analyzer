@@ -60,13 +60,13 @@ function TrendsContent({industries}) {
           ))}
         </div>
       </div>
-        <TrendsBody industry={industry}/>
+        <TrendsBody industry={industry} setIndustry={setIndustry} industries={industries}/>
     </div>
   );
 }
 
 
-function TrendsBody({industry}) {
+function TrendsBody({industry, setIndustry, industries}) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
 
@@ -88,6 +88,11 @@ function TrendsBody({industry}) {
       {loading ?
         <Loader text='Fetching latest Data' /> :
         <div className='trendsBody col'>
+          <select onChange={(e) => setIndustry(e.target.value)} id="industrySelector">
+            {industries.map(ind => (
+              <option className='h5' key={ind} value={ind}>{ind}</option>
+            ))}
+          </select>
           <span className='h2'>{industry}</span>
           <div className='chartWrap'>
             <TrendChart data={data.trend} xLabel='Month' yLabel='Postings' />

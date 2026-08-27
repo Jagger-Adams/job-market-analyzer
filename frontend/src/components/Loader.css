@@ -62,7 +62,7 @@
 }
 
 .loaderRoot svg {
-    width: 65vh;
+    width: min(65vh, 80vw);
     height: auto;
 }
 

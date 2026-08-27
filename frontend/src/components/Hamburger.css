@@ -1,0 +1,42 @@
+.hamburger{
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border: none; 
+    background: none; 
+    padding: 0; 
+    cursor: pointer;
+}
+
+.burgerLine{
+    position: absolute; 
+    left: 0;
+    background-color: var(--color-text);
+    height: 8%;
+    width: 100%;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.l1{
+    top: 0;
+}
+.l2{
+    top: 46%;
+}
+.l3{
+    top: 92%;
+}
+
+.l1.open{
+    top: 46%;
+    transform: rotate(45deg);
+}
+.l2.open{
+    opacity: 0;
+}
+.l3.open{
+    top: 46%;
+    transform: rotate(-45deg);
+}
+

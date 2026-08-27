@@ -65,3 +65,30 @@
     padding: var(--space-xs);
     cursor: pointer;
 }
+
+@media (max-width: 768px) {
+    .overviewCards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #topIndustryCard {
+        display: none;
+    }
+
+    .overviewCard {
+        width: auto;
+    }
+
+    .overviewBody{
+        flex-direction: column;
+    }
+
+    .overviewBody > * {
+        max-width: 100%;
+    }
+
+    .industryTable{
+        align-self: center;
+    }
+}

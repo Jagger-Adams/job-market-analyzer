@@ -1,8 +1,15 @@
+.headerWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--color-surface2); 
+    flex-shrink: 0;
+}
+
 .header {
     justify-content: space-between;
     align-items: center;
     padding: 0 var(--space-m);
-    background-color: var(--color-surface2);
     height: var(--header-height);
 }
 
@@ -49,6 +56,9 @@ a.active{
     align-items: center;
 }
 
+.hamburger{
+    display: none;
+}
 
 .themeSelect{
     padding: var(--space-s) var(--space-m);
@@ -56,4 +66,41 @@ a.active{
     border-radius: 4px;
     background-color: var(--color-surface);
     color: var(--color-text);
+}
+
+.headerMenu{
+    border-top: 2px solid var(--color-border);
+    padding: var(--space-s);
+}
+
+.menuThemeBox{
+    gap: var(--space-s);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-xs);
+}
+
+.headerMenu a{
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-xs);
+}
+
+@media (max-width: 768px) {
+    .headerAnimationBox, .themeBox{
+        display: none;
+    }
+
+    .logo{
+        height: 40px;
+    }
+
+    .hamburger{
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .headerMenu{
+        display: none;
+    }
 }
