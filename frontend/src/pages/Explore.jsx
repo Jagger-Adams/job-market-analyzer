@@ -36,7 +36,7 @@ const EMPLOYMENT_TERM_OPTIONS = ['Permanent', 'Temporary', 'Any'];
 
 const NOW = new Date();
 const MAX_MONTH = toYearMonth(NOW);
-const MIN_MONTH = toYearMonth(new Date(NOW.getFullYear() - 2, NOW.getMonth(), 1));
+const MIN_MONTH = toYearMonth(new Date(NOW.getFullYear() - 10, NOW.getMonth(), 1));
 
 const baseUrl = process.env.REACT_APP_API_URL;
 const MAX_SERIES = 8;

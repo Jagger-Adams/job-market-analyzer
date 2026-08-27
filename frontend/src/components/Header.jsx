@@ -17,19 +17,20 @@ function Header() {
     }, [theme]);
 
     useEffect(() => {
-    function updateIndicator() {
-        const active = containerRef.current?.querySelector('a.active');
-        setIndicatorStyle({
-            left: active?.offsetLeft ?? 0,
-            width: active?.offsetWidth ?? 0,
-        });
-    }
+        function updateIndicator() {
+            const active = containerRef.current?.querySelector('a.active');
+            setIndicatorStyle({
+                left: active?.offsetLeft ?? 0,
+                width: active?.offsetWidth ?? 0,
+            });
+        }
 
-    updateIndicator(); 
+        updateIndicator();
+        setMenuExpanded(false); 
 
-    window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
-}, [location]);
+        window.addEventListener('resize', updateIndicator);
+        return () => window.removeEventListener('resize', updateIndicator);
+    }, [location]);
 
     return(
         <div className='headerWrapper col'>
