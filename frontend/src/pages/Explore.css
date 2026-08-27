@@ -323,4 +323,12 @@
     .filtersRight, .filtersLeft{
         width: 100%;
     }
+
+    .seriesSelector{
+        flex-direction: column;
+    }
+
+    .seriesOptions, .selectedSeries{
+        height: 50%;
+    }
 }
